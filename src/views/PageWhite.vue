@@ -14,7 +14,7 @@
           <h2>Inner Page</h2>
           <ol>
             <li>
-              <router-link to="/login">
+              <router-link to="/home">
                   <a href="#"><span class="d-md-inline">Inicio</span></a>
               </router-link>
             </li>

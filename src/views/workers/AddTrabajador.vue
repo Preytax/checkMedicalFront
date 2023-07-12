@@ -11,22 +11,29 @@
         <div class="container">
   
           <div class="d-flex justify-content-between align-items-center">
-            <h2>Registrar trabajadores</h2>
+            <h2>Registrar {{ stg_perfil == 3 ? "Trabajador" : (stg_perfil == 2 ? "Operador" : "Administrador") }}</h2>
             <ol>
               <li>
                 <router-link to="/home">
                   <a href="#"><span class="d-md-inline">Inicio</span></a>
                 </router-link>
               </li>
-              <li>Registrar trabajadores</li>
+              <li>Registrar {{ stg_perfil == 3 ? "Trabajador" : (stg_perfil == 2 ? "Operador" : "Administrador") }}</li>
             </ol>
           </div>
   
         </div>
       </section><!-- End Breadcrumbs Section -->
-  
+
       <section class="inner-page">
         <div class="container">
+            <div :class=" showErrorMasivo ? classAlert == 1 ? 'alert-success' : 'alert-danger' : 'd-none'" class="alert" role="alert">
+                {{ showTextoMasivo }}
+            </div>
+            <button class="btn btn-primary btn-lg d-table mb-4" @click="btnMasivo()">
+                <img class="img_import" src="../../assets/iconos/cargaMasiva.svg" alt="">
+                Carga Masiva
+            </button>
           <div class="row g-3">
               <div class="col-sm-6">
                   <label for="firstName" class="form-label" _msttexthash="76193" _msthash="27">Nombre</label>
@@ -78,13 +85,30 @@
                   <select class="form-select" id="idPerfil" v-model="idPerfil">
                       <option value="" selected>Elegir...</option>
                       <template v-for="perfil in perfiles">
-                          <option  v-if="perfil.id == 1 || perfil.id == 2" :key="perfil.id" :value="perfil.id">{{perfil.perfil}}</option>
+                          <option  v-if="stg_perfil == 1 && perfil.id == 2" :key="perfil.id" :value="perfil.id">{{perfil.perfil}}</option>
+                          <option  v-if="stg_perfil == 2 && perfil.id == 3" :key="perfil.id" :value="perfil.id">{{perfil.perfil}}</option>
+                          <option  v-if="stg_perfil == 3 && perfil.id == 4" :key="perfil.id" :value="perfil.id">{{perfil.perfil}}</option>
                       </template>
                   </select>
                   <div ref="idPerfil" class="invalid-feedback" _msttexthash="631839" _msthidden="1" _msthash="49">
                       El tipo de perfil es obligatorio.
                   </div>
               </div>
+
+              <template v-if="stg_perfil == 1">
+                <div class="col-sm-6">
+                  <label for="state" class="form-label" _msttexthash="76037" _msthash="46">Ambiente</label>
+                  <select class="form-select" id="idAmbiente" v-model="idAmbiente">
+                      <option value="" selected>Elegir...</option>
+                      <template v-for="ambiente in ambientes" :key="ambiente.id">
+                          <option :value="ambiente.id">{{ambiente.ambiente}}</option>
+                      </template>
+                  </select>
+                  <div ref="idAmbiente" class="invalid-feedback" _msttexthash="631839" _msthidden="1" _msthash="49">
+                      El ambiente es obligatorio.
+                  </div>
+                </div>
+              </template>
 
               <div class="col-sm-6">
                   <label for="firstName" class="form-label" _msttexthash="76193" _msthash="27">Direcci&oacute;n</label>
@@ -122,8 +146,32 @@
       </section>
   
     </main><!-- End #main -->
+    <div :class="showMasivo == true ? 'd-block' : 'd-none'" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Carga Masiva</h5>
+                    <button @click="btnMasivo()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        
+                        <div>
+                            <!-- <label for="formFileLg" class="form-label">Large file input example</label> -->
+                            <input ref="archivoMasivo" class="form-control form-control-lg" type="file" accept=".xlsx, .xls" @change="handleFileChange" />
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button @click="btnMasivo()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button @click="uploadFile()" class="btn btn-success">Registrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
   
-    <div id="preloader" class="d-none"></div>
+    <div id="preloader" :class="preloader == false ? 'd-none' : ''"></div>
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
   </template>
   
@@ -145,21 +193,32 @@
     data() {
       return {
         perPage: 10,
-        id: localStorage.getItem('id'),
-        idPerfil: null,
-        nombres: null,
-        apellidoPaterno: null,
-        apellidoMaterno: null,
-        direccion: null,
-        tipoDocumento: null,
-        nroDocumento: null,
-        fechaNacimiento: null,
-        correo: null,
-        password: null,
-        showAlert: false,
-        perfiles: null,
-        tiposDocumentos: null,
-        valorAlerta: ""
+        stg_perfil  : localStorage.getItem("id_perfil"),
+        stg_id      : localStorage.getItem('id'),
+        idPerfil    : null,
+        idAmbiente  : localStorage.getItem("id_ambiente"),
+        nombres     : null,
+        apellidoPaterno : null,
+        apellidoMaterno : null,
+        direccion       : null,
+        tipoDocumento   : null,
+        nroDocumento    : null,
+        fechaNacimiento : null,
+        correo      : null,
+        password    : null,
+        showAlert   : false,
+        perfiles    : null,
+        ambientes   : null,
+        tiposDocumentos : null,
+        valorAlerta     : "",
+        preloader   : false,
+        showMasivo  : false,
+        showErrorMasivo : false,
+        showTextoMasivo : "",
+        classAlert  : "",
+        file        : null,
+        formData    : null,
+        idSede      : localStorage.getItem("id_sede"),
       };
     },
     computed: {
@@ -176,10 +235,56 @@
         const responsePerfil = await axios.get( this.BASE_URL_AXIOS + 'getPerfiles');
         this.perfiles = responsePerfil.data;
 
+        const response = await axios.get(this.BASE_URL_AXIOS + 'getAmbientes');
+        this.ambientes = response.data;
+
         const responseTipoDocumento = await axios.get( this.BASE_URL_AXIOS + 'getDocumentos');
         this.tiposDocumentos = responseTipoDocumento.data;
     },
     methods: {
+        btnMasivo(){
+            if(this.showMasivo == false){
+                this.showMasivo = true;
+            } else {
+                this.showMasivo = false;
+            }
+        },
+        handleFileChange(event) {
+            this.file = event.target.files[0];
+        },
+        async uploadFile() {
+            if(this.$refs.archivoMasivo.value != ""){
+                this.preloader = true;
+                this.formData = new FormData();
+                this.formData.append('file', this.file);
+
+                // Realiza la solicitud POST para enviar el archivo al backend
+                const response = await axios({
+                    method: "POST",
+                    url: this.BASE_URL_AXIOS + "savePersonaMasivo/" + this.idAmbiente+"/" + this.idSede,
+                    data: this.formData,
+                    headers: {
+                        "Content-Type": "file"
+                    }
+                })
+
+                this.btnMasivo();
+                if (response.data == true){
+                    this.showTextoMasivo = "Se registraron las personas correctamente.";
+                    this.classAlert = 1;
+                } else {
+                    this.showTextoMasivo = "Hubo un error al cargar los registros.";
+                    this.classAlert = 2;
+                }
+
+                this.$refs.archivoMasivo.value = '';
+                this.preloader = false;
+                this.showErrorMasivo = true;
+                setTimeout(() => {
+                    this.showErrorMasivo = false;
+                }, 2500);
+            }
+        },
       paginateData(page) {
         this.currentPage = page;
       },
@@ -243,10 +348,18 @@
                 this.$refs.password.classList.add("mostrarObligatorio");
                 error = 1;
             }
+            if (this.stg_perfil == 1) {
+                if (this.idAmbiente == null || this.idAmbiente == "") {
+                    this.$refs.idAmbiente.classList.add("mostrarObligatorio");
+                    error = 1;
+                }
+            }
+
+
             if(error == 0){
                 const newPersona = {
-                    idAmbiente    : localStorage.getItem("id_ambiente"),
-                    idSede        : localStorage.getItem("id_sede"),
+                    idAmbiente    : this.stg_perfil == 1 ? this.idAmbiente : localStorage.getItem("id_ambiente"),
+                    idSede        : this.idSede,
                     idPerfil      : this.idPerfil,
                     nombres       : this.nombres,
                     apellidoPaterno : this.apellidoPaterno,
@@ -292,4 +405,11 @@
     }
   };
   </script>
+
+<style>
+.img_import {
+    width: 30px;
+    margin-right: 5px;
+}
+</style>
   

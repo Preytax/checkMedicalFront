@@ -13,7 +13,7 @@
         <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
       </div>
       <div v-if="session" class="d-none d-lg-flex social-links align-items-center">
-        <p style="margin: 0 10px 0 0;">Pierr Liñer</p>
+        <p style="margin: 0 10px 0 0;">{{ stg_correo }}</p>
         <button href="#" class="btn btn-success" @click="singOut()">Cerrar sesión</button></div>
       </div>
   </div>
@@ -25,7 +25,8 @@
     name: "Inc_top_bar",
     data() {
         return {
-          session: false
+          stg_correo: localStorage.getItem("correo"),
+          session   : false
         };
     },
     mounted() {

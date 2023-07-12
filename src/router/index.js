@@ -6,6 +6,12 @@ import PageLogin  from '../views/session/PageLogin.vue'
 import PageHome   from '../views/navegation/PageHome.vue'
 import AddTrabajador from '../views/workers/AddTrabajador.vue'
 import listTrabajadores from '../views/workers/ListTrabajadores.vue'
+import AddAmbiente from '../views/environment/AddAmbiente.vue'
+import listAmbientes from '../views/environment/ListAmbientes.vue'
+import AddRecordatorio from '../views/reminder/AddRecordatorio.vue'
+import listRecordatorios from '../views/reminder/ListRecordatorios.vue'
+import AddChequeo from '../views/chequeo/AddChequeo.vue'
+import ListChequeo from '../views/chequeo/ListChequeo.vue'
 
 const routes = [
   /*{
@@ -42,6 +48,36 @@ const routes = [
     path: '/listTrabajadores',
     name: 'listTrabajadores',
     component: listTrabajadores
+  },
+  {
+    path: '/AddAmbiente',
+    name: 'AddAmbiente',
+    component: AddAmbiente
+  },
+  {
+    path: '/listAmbientes',
+    name: 'listAmbientes',
+    component: listAmbientes
+  },
+  {
+    path: '/AddRecordatorio',
+    name: 'AddRecordatorio',
+    component: AddRecordatorio
+  },
+  {
+    path: '/listRecordatorios',
+    name: 'listRecordatorios',
+    component: listRecordatorios
+  },
+  {
+    path: '/AddChequeo',
+    name: 'AddChequeo',
+    component: AddChequeo
+  },
+  {
+    path: '/ListChequeo',
+    name: 'ListChequeo',
+    component: ListChequeo
   }/*,
   {
     path: '/about',

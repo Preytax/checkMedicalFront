@@ -39,6 +39,13 @@ app.provide('BASE_URL_AXIOS', BASE_URL_AXIOS);
 /* END VARIBLES GLOBALES */
 
 
+/* MOMENT */
+import moment from 'moment';
+// eslint-disable-next-line vue/multi-word-component-names
+app.component('moment', moment);
+/* END MOMENT */
+
+
 /* AXIOS */
 import axios from 'axios';
 // eslint-disable-next-line vue/multi-word-component-names

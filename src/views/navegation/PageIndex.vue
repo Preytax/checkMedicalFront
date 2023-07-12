@@ -182,7 +182,15 @@
             <div class="icon-box">
               <div class="icon"><i class="fas fa-hospital-user"></i></div>
               <h4>Recordatorios</h4>
-              <p>Agregar, editar y listar recordatorios personalizados por cada trabajador</p>
+              <p>Agregar, editar recordatorios personalizados por cada trabajador</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
+            <div class="icon-box">
+              <div class="icon"><i class="fa fa-list-check"></i></div>
+              <h4>Agregar recordatorios</h4>
+              <p>Agregar recordatorios previamente agregado en el sistema de registros</p>
             </div>
           </div>
 
@@ -202,13 +210,13 @@
             </div>
           </div>
 
-          <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
+          <!-- <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
             <div class="icon-box">
               <div class="icon"><i class="fas fa-notes-medical"></i></div>
               <h4>--------------</h4>
               <p>--------------</p>
             </div>
-          </div>
+          </div> -->
 
         </div>
 
