@@ -29,12 +29,12 @@ import 'bootstrap/dist/js/bootstrap.js';
 const app = createApp(App).use(router);
 
 /* VARIBLES GLOBALES */
-//const BASE_URL = "http://" + window.location.host + "/";
-const BASE_URL = "https://checkmedical.laschelitass.com/";
+const BASE_URL = "http://" + window.location.host + "/";
+//const BASE_URL = "https://checkmedical.laschelitass.com/";
 app.provide('BASE_URL', BASE_URL);
 
-//const BASE_URL_AXIOS = BASE_URL.replace('8081', '8080');
-const BASE_URL_AXIOS = 'https://checkmedicalback-production.up.railway.app/';
+const BASE_URL_AXIOS = BASE_URL.replace('8081', '8080');
+//const BASE_URL_AXIOS = 'https://checkmedicalback-production.up.railway.app/';
 app.provide('BASE_URL_AXIOS', BASE_URL_AXIOS);
 /* END VARIBLES GLOBALES */
 

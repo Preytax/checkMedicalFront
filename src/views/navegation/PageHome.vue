@@ -6,7 +6,7 @@
 
     <main id="main">
         <!-- ======= services Section ======= -->
-        <section class="services mt-4">
+        <section class="services">
           <div class="container">
               <div class="section-title">
                 <h2>Servicios</h2>
@@ -17,7 +17,7 @@
               
             <div class="row">
               <template v-if="stg_perfil == 4">
-                <router-link to="/addTrabajador" class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                <!-- <router-link to="/addTrabajador" class="col-lg-4 col-md-6 d-flex align-items-stretch">
                   <div>
                     <div class="icon-box">
                       <div class="icon"><i class="fas fa-notes-medical"></i></div>
@@ -25,8 +25,8 @@
                       <p>Agregar un nuevo Cheqeo Medico al sistema de gestion de registros</p>
                     </div>
                   </div>
-                </router-link>
-                <router-link to="/listTrabajadores" class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
+                </router-link> -->
+                <router-link to="/listChequeo" class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
                   <div>
                     <div class="icon-box">
                       <div class="icon"><i class="fas fa-heartbeat"></i></div>
@@ -77,13 +77,34 @@
                 </router-link>
               </template>
 
+              <template v-if="stg_perfil == 2">
+                <router-link to="/addClinic" class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                  <div>
+                    <div class="icon-box">
+                      <div class="icon"><i class="fas fa-notes-medical"></i></div>
+                      <h4><a href="">Registrar Clinica</a></h4>
+                      <p>Agregar a una nueva Clinica en el sistema de chequeos medicos</p>
+                    </div>
+                  </div>
+                </router-link>
+                <router-link to="/listClinics" class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
+                  <div>
+                    <div class="icon-box">
+                      <div class="icon"><i class="fa fa-list-check"></i></div>
+                      <h4><a href="">Listar Clinicas</a></h4>
+                      <p>Listar Clinicas previamente agregado en el sistema de registros</p>
+                    </div>
+                  </div>
+                </router-link>
+              </template>
+
               <template v-if="stg_perfil == 3">
                 <router-link to="/addRecordatorio" class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
                   <div>
                     <div class="icon-box">
                       <div class="icon"><i class="fas fa-hospital-user"></i></div>
-                      <h4><a href="">Agregar Recordatorios</a></h4>
-                      <p>Agregar, editar y listar recordatorios personalizados por cada trabajador</p>
+                      <h4><a href="">Agregar Citas</a></h4>
+                      <p>Agregar citas personalizadas por cada trabajador en sistema de registros</p>
                     </div>
                   </div>
                 </router-link>
@@ -92,8 +113,8 @@
                   <div>
                     <div class="icon-box">
                       <div class="icon"><i class="fa fa-list-check"></i></div>
-                      <h4><a href="">Listar Recordatorios</a></h4>
-                      <p>Listar Recordatorios previamente agregado en el sistema de registros</p>
+                      <h4><a href="">Listar Citas</a></h4>
+                      <p>Listar citas previamente agregado en el sistema de registros</p>
                     </div>
                   </div>
                 </router-link>
@@ -142,6 +163,15 @@
   import Inc_top_bar from "../inc/Inc_top_bar";
 
   export default {
+    beforeRouteEnter(to, from, next) {
+        // Verificar si la variable de sesión existe
+        if (!localStorage.getItem('id')) {
+            // Redirigir a la página de inicio de sesión
+            next('/login');
+        } else {
+            next();
+        }
+    },
     //inject: ['BASE_URL'],
     name: "inc_head",
     components:{
@@ -159,3 +189,9 @@
     }
   };
 </script>
+
+<style>
+.services {
+  margin-top: 10vh;
+}
+</style>

@@ -181,16 +181,16 @@
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
             <div class="icon-box">
               <div class="icon"><i class="fas fa-hospital-user"></i></div>
-              <h4>Recordatorios</h4>
-              <p>Agregar, editar recordatorios personalizados por cada trabajador</p>
+              <h4>Agregar Citas</h4>
+              <p>Agregar citas personalizadas por cada trabajador en sistema de registros</p>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
             <div class="icon-box">
               <div class="icon"><i class="fa fa-list-check"></i></div>
-              <h4>Agregar recordatorios</h4>
-              <p>Agregar recordatorios previamente agregado en el sistema de registros</p>
+              <h4>Listar Citas</h4>
+              <p>Listar citas previamente agregado en el sistema de registros</p>
             </div>
           </div>
 

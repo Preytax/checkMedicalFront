@@ -27,7 +27,7 @@
   
       <section class="inner-page">
         <div class="container">
-          <button @click="exportarPersonas()" class="btn btn-success d-table">
+          <button v-if="idPerfil == 3" @click="exportarChequeos()" class="btn btn-success d-table">
             <img class="img_export" src="../../assets/iconos/descargaMasiva.svg">
             Exportar
           </button>
@@ -35,23 +35,25 @@
             <thead class="custom-thead">
               <tr>
                 <th>Id</th>
-                <th>Trabajador</th>
+                <th>Id de Cita</th>
+                <th v-if="idPerfil == 3">Id de Trabajador</th>
                 <th>Estado</th>
-                <th>Fecha de Enision</th>
+                <th>Fecha de Enisi&oacute;n</th>
                 <th>Fecha de Venciniento</th>
+                <th>Chequeo Medico</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="chequeoMedico in chequeosMedicos" :key="chequeoMedico.id">
                 <td>{{ chequeoMedico.id }}</td>
-                <td>{{ chequeoMedico.idPersona }}</td>
-                <td>{{ chequeoMedico.estado == 1 ? "Finalizado" : "Dehabilitado"}}</td>
+                <td>{{ chequeoMedico.idCita }}</td>
+                <td v-if="idPerfil == 3">{{ chequeoMedico.idPersona }}</td>
+                <td>{{ chequeoMedico.estado == 1 ? "Pendiente" : chequeoMedico.estado == 2 ? "Aprovado" : "Reprobado" }}</td>
                 <td>{{ chequeoMedico.fechaEmision }}</td>
                 <td>{{ chequeoMedico.fechaVencimiento }}</td>
-                <td>
-                  <a v-if="trabajador.estado == 0" class="btn btn-success m-1" @click="suspender(chequeoMedico.id, chequeoMedico.estado)">Finalizar</a>
-                  <a v-if="chequeoMedico.estado == 1" class="btn btn-secondary m-1" @click="suspender(chequeoMedico.id, chequeoMedico.estado)">Deshabilitar</a>
-                  <button v-if="chequeoMedico.estado != 2" type="button" @click="ShowModalEliminar(chequeoMedico.id, chequeoMedico.correo)" class="btn btn-danger m-1">Eliminar</button>
+                <td><button v-if="chequeoMedico.estado == 1 || chequeoMedico.estado == 2" type="button" @click="donwloadChequeoMedico(chequeoMedico.pdf)" class="btn btn-success m-1">Ver</button></td>
+                <td v-if="idPerfil != 4">
+                  <button v-if="chequeoMedico.estado == 1" type="button" @click="ShowModalEliminar(chequeoMedico.id, chequeoMedico.correo)" class="btn btn-danger m-1">Eliminar</button>
                 </td>
               </tr>
             </tbody>
@@ -68,8 +70,8 @@
   <script>
     import Inc_nav from "../inc/Inc_nav";
     import Inc_top_bar from "../inc/Inc_top_bar";
-  
-    var axios = require('axios');
+    import moment from 'moment';
+    import axios from 'axios';
     
     export default {
       beforeRouteEnter(to, from, next) {
@@ -77,7 +79,7 @@
           if (!localStorage.getItem('id')) {
               // Redirigir a la página de inicio de sesión
               next('/');
-          } else if(localStorage.getItem('id_perfil') != 3){
+          } else if(localStorage.getItem('id_perfil') < 3){
               next('/');
           } else {
               next();
@@ -91,21 +93,75 @@
       },
       data() {
         return {
-          chequeosMedicos: []
+          chequeosMedicos : [],
+          idPersona       : localStorage.getItem('id'),
+          idPerfil        : localStorage.getItem("id_perfil"),
         };
       },
       mounted() {
         this.getChequeoMedicos();
       },
       methods: {
+        async exportarChequeos() {
+            try {
+                const response = await axios.get(this.BASE_URL_AXIOS + 'exportarCheuqeosMedicos', { responseType: 'blob' });
+                const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+                // Crea un objeto URL para el blob
+                const url = window.URL.createObjectURL(blob);
+
+                // Crea un elemento de enlace temporal y establece su atributo de descarga y URL
+                const link = document.createElement('a');
+                link.href = url;
+
+                link.setAttribute('download', 'Chequeos Medicos ' + moment().format("DD-MM-Y HH_mm_ss") + '.xlsx');
+
+                // Simula un clic en el enlace para iniciar la descarga
+                link.click();
+
+                // Libera el objeto URL y elimina el elemento de enlace
+                window.URL.revokeObjectURL(url);
+                link.remove();
+            } catch (error) {
+                console.error(error);
+            }
+        },
         async getChequeoMedicos() {
             try {
-              const response = await axios.get(this.BASE_URL_AXIOS + 'getChequeoMedicos/4/1,0');
+              let response = "";
+              if(this.idPerfil != 4){
+                response = await axios.get(this.BASE_URL_AXIOS + 'getChequeoMedicos');
+
+              }else{
+                response = await axios.get(this.BASE_URL_AXIOS + 'getChequeoMedicoByIdPersona/'+this.idPersona);
+              }
+
               this.chequeosMedicos = response.data;
             } catch (error) {
               console.error(error);
             }
           },
+          async donwloadChequeoMedico(nombreArchivo) {
+            const url = this.BASE_URL_AXIOS + 'descargarChequeoMedico/' + nombreArchivo;
+
+            try {
+              const response = await axios.get(url, {
+                responseType: 'blob' // Especificar que la respuesta es un objeto Blob
+              });
+
+              const urlArchivo = window.URL.createObjectURL(new Blob([response.data]));
+
+              // Crear un enlace temporal y hacer clic en él para descargar el archivo
+              const enlace = document.createElement('a');
+              enlace.href = urlArchivo;
+              enlace.setAttribute('download', nombreArchivo);
+              document.body.appendChild(enlace);
+              enlace.click();
+              document.body.removeChild(enlace);
+            } catch (error) {
+              console.error('Error al descargar el archivo:', error);
+            }
+          }
       }
     };
   </script>

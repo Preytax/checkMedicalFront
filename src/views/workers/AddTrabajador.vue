@@ -164,7 +164,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button @click="btnMasivo()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button @click="btnMasivo()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     <button @click="uploadFile()" class="btn btn-success">Registrar</button>
                 </div>
             </div>

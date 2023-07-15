@@ -9,7 +9,6 @@
       <!-- ======= Breadcrumbs Section ======= -->
       <section class="breadcrumbs mt-5">
         <div class="container">
-  
           <div class="d-flex justify-content-between align-items-center">
             <h2>Listar {{ stg_perfil == 3 ? "Trabajadores" : (stg_perfil == 2 ? "Operadores" : "Administradores") }}</h2>
             <ol>
@@ -78,7 +77,7 @@
               <p>&#191;Quiere eliminar al usuario {{ datosEliminar.correo }}&#63;</p>
             </div>
             <div class="modal-footer">
-              <button type="button" @click="hideModalEliminar()" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" @click="hideModalEliminar()" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
               <button type="button" @click="eliminarPersona(datosEliminar.id)" class="btn btn-danger btn-eliminar">Eliminar</button>
             </div>
           </div>

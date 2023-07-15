@@ -11,14 +11,14 @@
         <div class="container">
   
           <div class="d-flex justify-content-between align-items-center">
-            <h2>Crear Recordatorio</h2>
+            <h2>Agregar Cita</h2>
             <ol>
               <li>
                 <router-link to="/home">
                     <a href="#"><span class="d-md-inline">Inicio</span></a>
                 </router-link>
               </li>
-              <li>Crear Recordatorio</li>
+              <li>Agregar Cita</li>
             </ol>
           </div>
   
@@ -36,13 +36,6 @@
                 </button>
                 <div class="row g-3">
                     <div class="col-sm-6">
-                        <label for="firstName" class="form-label" _msttexthash="76193" _msthash="27">Nombre del recordatorio</label>
-                        <input type="text" class="form-control" id="recordatorio" placeholder="" maxlength="45" v-model="recordatorio" required/>
-                        <div ref="recordatorio" class="invalid-feedback" _msttexthash="637039" _msthidden="1" _msthash="28">
-                            El nombre es obligatorio.
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
                         <label for="firstName" class="form-label" _msttexthash="76193" _msthash="27">Trabajador</label>
                         <select class="form-select" id="trabajador" v-model="trabajador">
                             <option value="" selected>Elegir...</option>
@@ -51,11 +44,16 @@
                             </template>
                         </select>
                         <div ref="trabajador" class="invalid-feedback" _msttexthash="637039" _msthidden="1" _msthash="28">
-                            El Trabajador es obligatorio es obligatorio.
+                            El Trabajador es obligatorio.
                         </div>
                     </div>
-
-
+                    <div class="col-sm-6">
+                        <label for="firstName" class="form-label" _msttexthash="76193" _msthash="27">Fecha y Hora de Cita</label>
+                        <input type="datetime-local" class="form-control" id="fechaCita" placeholder="" maxlength="45" v-model="fechaCita" required/>
+                        <div ref="fechaCita" class="invalid-feedback" _msttexthash="637039" _msthidden="1" _msthash="28">
+                            La fecha y hora de cita son obligatorias.
+                        </div>
+                    </div>
                     <div class="col-sm-6">
                         <label for="firstName" class="form-label" _msttexthash="76193" _msthash="27">Clinica</label>
                         <select class="form-select" id="clinica" v-model="clinica" @change="actualizarDireccion()">
@@ -65,14 +63,14 @@
                             </template>
                         </select>
                         <div ref="fechaInicio" class="invalid-feedback" _msttexthash="637039" _msthidden="1" _msthash="28">
-                            El Trabajador es obligatorio es obligatorio.
+                            La clinica es obligatoria.
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <label for="firstName" class="form-label" _msttexthash="76193" _msthash="27">Direcci&oacute;n de Clinica</label>
                         <input type="text" class="form-control" id="direccion" placeholder="" maxlength="45" v-model="direccion" required disabled/>
                         <div ref="direccion" class="invalid-feedback" _msttexthash="637039" _msthidden="1" _msthash="28">
-                            El Trabajador es obligatorio es obligatorio.
+                            La direcc&oacute;n es obligatoria.
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -83,26 +81,24 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <label for="firstName" class="form-label" _msttexthash="76193" _msthash="27">Fecha y Hora de Cita</label>
-                        <input type="datetime-local" class="form-control" id="fechaCita" placeholder="" maxlength="45" v-model="fechaCita" required/>
-                        <div ref="fechaCita" class="invalid-feedback" _msttexthash="637039" _msthidden="1" _msthash="28">
-                            La fecha de cita es obligatoria.
+                        <label for="firstName" class="form-label" _msttexthash="76193" _msthash="27">Comentario</label>
+                        <input type="text" class="form-control" id="recordatorio" placeholder="" maxlength="45" v-model="recordatorio" required/>
+                        <div ref="recordatorio" class="invalid-feedback" _msttexthash="637039" _msthidden="1" _msthash="28">
+                            El Comentario es obligatorio.
                         </div>
                     </div>
-
-
                     <div class="col-sm-6">
                         <label for="firstName" class="form-label" _msttexthash="76193" _msthash="27">Fecha de Inicio</label>
                         <input type="date" class="form-control" id="fechaInicio" placeholder="" maxlength="45" v-model="fechaInicio" required/>
                         <div ref="fechaInicio" class="invalid-feedback" _msttexthash="637039" _msthidden="1" _msthash="28">
-                            El Trabajador es obligatorio.
+                            La fecha de inicio es obligatoria.
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <label for="firstName" class="form-label" _msttexthash="76193" _msthash="27">Fecha de Fin</label>
                         <input type="date" class="form-control" id="fechaFin" placeholder="" maxlength="45" v-model="fechaFin" required/>
                         <div ref="fechaFin" class="invalid-feedback" _msttexthash="637039" _msthidden="1" _msthash="28">
-                            El Trabajador es obligatorio.
+                            La fecha de fin es obligatoria.
                         </div>
                     </div>
                     <hr class="my-4">
@@ -202,7 +198,7 @@
         },
         async getAllClinicas() {
             try {
-              const responseClinicas = await axios.get(this.BASE_URL_AXIOS + 'getClinicas');
+              const responseClinicas = await axios.get(this.BASE_URL_AXIOS + 'getClinicas/1');
               this.clinicas = responseClinicas.data;
             } catch (error) {
               console.error(error);
@@ -210,7 +206,7 @@
           },
         async getAllTrabajadores() {
           try {
-            const response = await axios.get(this.BASE_URL_AXIOS + 'getPersonas/4/1,0');
+            const response = await axios.get(this.BASE_URL_AXIOS + 'getPersonas/4/1');
             this.trabajadores = response.data;
           } catch (error) {
             console.error(error);

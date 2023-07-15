@@ -11,14 +11,14 @@
       <div class="container">
 
         <div class="d-flex justify-content-between align-items-center">
-          <h2>Listar Recordatorios</h2>
+          <h2>Listar Citas</h2>
           <ol>
             <li>
               <router-link to="/login">
                   <a href="#"><span class="d-md-inline">Inicio</span></a>
               </router-link>
             </li>
-            <li>Listar Recordatorios</li>
+            <li>Listar Citas</li>
           </ol>
         </div>
 
@@ -27,7 +27,7 @@
 
     <section class="inner-page">
       <div class="container">
-        <button @click="exportarPersonas()" class="btn btn-success d-table">
+        <button @click="exportarCitas()" class="btn btn-success d-table">
           <img class="img_export" src="../../assets/iconos/descargaMasiva.svg">
           Exportar
         </button>
@@ -35,11 +35,12 @@
           <thead class="custom-thead">
             <tr>
               <th>Id</th>
-              <th>Recordatorio</th>
+              <th>Fecha de cita</th>
+              <th>Id Trabajador</th>
               <th>Trabajador</th>
               <th>Clinica</th>
               <th>Ambiente</th>
-              <th>Fecha de cita</th>
+              <th>Comentario</th>
               <th>Fecha de inicio</th>
               <th>Fecha de fin</th>
               <th>Acciones</th>
@@ -48,7 +49,8 @@
           <tbody>
             <tr v-for="recordatorio in recordatorios" :key="recordatorio.id">
               <td>{{ recordatorio.id }}</td>
-              <td>{{ recordatorio.recordatorio }}</td>
+              <td>{{ recordatorio.fechaCita }}</td>
+              <td>{{ recordatorio.idPersona }}</td>
               <td>
                 <template v-if="nombresPersonaPromises[recordatorio.idPersona]">
                   <span v-if="nombresPersonaPromises[recordatorio.idPersona].resolved">{{ nombresPersonaPromises[recordatorio.idPersona].value }}</span>
@@ -62,10 +64,10 @@
                 </template>
               </td>
               <td>{{ recordatorio.ambiente }}</td>
-              <td>{{ recordatorio.fechaCita }}</td>
+              <td>{{ recordatorio.recordatorio }}</td>
               <td>{{ recordatorio.fechaInicio }}</td>
               <td>{{ recordatorio.fechaFin }}</td>
-              <td><button type="button" class="btn btn-danger"  @click="ShowModalEliminar(recordatorio.id, recordatorio.recordatorio)">Eliminar</button></td>
+              <td><button v-if="recordatorio.estado == 1" type="button" class="btn btn-danger"  @click="ShowModalEliminar(recordatorio.id, recordatorio.recordatorio)">Eliminar</button></td>
             </tr>
 
           </tbody>
@@ -182,7 +184,7 @@
       async fetchNombresPersona(idPersonaUnico) {
         try {
           const response = await axios.get(this.BASE_URL_AXIOS + 'getPersonaById/' + idPersonaUnico);
-          return response.data["nombres"];
+          return response.data["nombres"] + " " + response.data["apellidoPaterno"];
         } catch (error) {
           console.error(error);
           return ""; // En caso de error, puedes retornar un valor vacío o manejar el error de otra manera
@@ -199,7 +201,7 @@
       },
       async getAllRecordatorios() {
         try {
-          const response = await axios.get(this.BASE_URL_AXIOS + 'getRecordatorios/1');
+          const response = await axios.get(this.BASE_URL_AXIOS + 'getRecordatorios/1,4');
           this.recordatorios = response.data;
 
           // Obtener los nombres de persona y almacenar las promesas en el objeto nombresPersonaPromises
@@ -247,7 +249,7 @@
           console.error(error);
         }
       },
-      async exportarPersonas() {
+      async exportarCitas() {
         try {
           const response = await axios.get(this.BASE_URL_AXIOS + 'exportarRecordatorios', { responseType: 'blob' });
           const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -259,7 +261,7 @@
           const link = document.createElement('a');
           link.href = url;
 
-          link.setAttribute('download', 'Recordatorios ' + moment().format("DD-MM-Y HH_mm_ss") + '.xlsx');
+          link.setAttribute('download', 'Citas ' + moment().format("DD-MM-Y HH_mm_ss") + '.xlsx');
 
           // Simula un clic en el enlace para iniciar la descarga
           link.click();

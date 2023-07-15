@@ -12,6 +12,8 @@ import AddRecordatorio from '../views/reminder/AddRecordatorio.vue'
 import listRecordatorios from '../views/reminder/ListRecordatorios.vue'
 import AddChequeo from '../views/chequeo/AddChequeo.vue'
 import ListChequeo from '../views/chequeo/ListChequeo.vue'
+import AddClinic from '../views/clinic/AddClinic.vue'
+import ListClinics from '../views/clinic/ListClinics.vue'
 
 const routes = [
   /*{
@@ -19,6 +21,16 @@ const routes = [
     name: 'home',
     component: HomeView
   },*/
+  {
+    path: '/AddClinic',
+    name: 'AddClinic',
+    component: AddClinic
+  },
+  {
+    path: '/ListClinics',
+    name: 'ListClinics',
+    component: ListClinics
+  },
   {
     path: '/',
     name: 'index',
